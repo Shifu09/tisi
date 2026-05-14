@@ -22,6 +22,12 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('tickets', 'ticket-list')->name('tickets');
     Volt::route('tickets/create', 'ticket-create')->name('tickets.create');
     Volt::route('tickets/{id}', 'ticket-detail')->name('tickets.detail');
+
+    // Agent routes
+    Volt::route('agent/tickets', 'agent-dashboard')->name('agent.dashboard')->middleware('role:agent');
+
+    // Admin routes
+    Volt::route('admin/dashboard', 'admin-dashboard')->name('admin.dashboard')->middleware('role:admin');
 });
 
 require __DIR__ . '/auth.php';

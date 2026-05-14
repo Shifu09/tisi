@@ -1,0 +1,83 @@
+0 verbose cli C:\nvm4w\nodejs\node.exe C:\nvm4w\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.2
+2 info using node@v22.13.1
+3 silly config load:file:C:\Users\Darwyn\AppData\Local\nvm\v22.13.1\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\Darwyn\Documents\tisi\.npmrc
+5 silly config load:file:C:\Users\Darwyn\.npmrc
+6 silly config load:file:C:\Users\Darwyn\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install ***
+8 verbose argv "install" "--cache" "" "***" "--loglevel" "verbose"
+9 verbose logfile logs-max:10 dir:C:\Users\Darwyn\Documents\tisi\_logs\2026-05-13T13_04_28_631Z-
+10 verbose logfile C:\Users\Darwyn\Documents\tisi\_logs\2026-05-13T13_04_28_631Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+13 silly idealTree buildDeps
+14 silly fetch manifest @tailwindcss/vite@^4.0.7
+15 silly packumentCache full:https://npmmirror.com/@tailwindcss%2fvite cache-miss
+16 http fetch GET 200 https://npmmirror.com/npm 1795ms
+17 http fetch GET 200 https://npmmirror.com/@tailwindcss%2fvite 2040ms (cache miss)
+18 silly fetch manifest autoprefixer@^10.4.20
+19 silly packumentCache full:https://npmmirror.com/autoprefixer cache-miss
+20 http fetch GET 200 https://npmmirror.com/autoprefixer 298ms (cache miss)
+21 silly fetch manifest axios@^1.7.4
+22 silly packumentCache full:https://npmmirror.com/axios cache-miss
+23 http fetch GET 200 https://npmmirror.com/axios 298ms (cache miss)
+24 silly fetch manifest concurrently@^9.0.1
+25 silly packumentCache full:https://npmmirror.com/concurrently cache-miss
+26 http fetch GET 200 https://npmmirror.com/concurrently 302ms (cache miss)
+27 silly fetch manifest laravel-vite-plugin@^1.0
+28 silly packumentCache full:https://npmmirror.com/laravel-vite-plugin cache-miss
+29 http fetch GET 200 https://npmmirror.com/laravel-vite-plugin 1188ms (cache miss)
+30 silly fetch manifest tailwindcss@^4.0.7
+31 silly packumentCache full:https://npmmirror.com/tailwindcss cache-miss
+32 http fetch GET 200 https://npmmirror.com/tailwindcss 297ms (cache miss)
+33 silly fetch manifest vite@^6.0
+34 silly packumentCache full:https://npmmirror.com/vite cache-miss
+35 http fetch GET 200 https://npmmirror.com/vite 714ms (cache miss)
+36 silly fetch manifest 7ac6dc23-2f56-4915-876b-bdc00f2bfdad@*
+37 silly packumentCache full:https://npmmirror.com/7ac6dc23-2f56-4915-876b-bdc00f2bfdad cache-miss
+38 http fetch GET 200 https://npmmirror.com/*** 316ms (cache miss)
+39 silly fetch manifest @rollup/rollup-linux-x64-gnu@4.9.5
+40 silly packumentCache full:https://npmmirror.com/@rollup%2frollup-linux-x64-gnu cache-miss
+41 http fetch GET 200 https://npmmirror.com/@rollup%2frollup-linux-x64-gnu 298ms (cache miss)
+42 silly fetch manifest @tailwindcss/oxide-linux-x64-gnu@^4.0.1
+43 silly packumentCache full:https://npmmirror.com/@tailwindcss%2foxide-linux-x64-gnu cache-miss
+44 http fetch GET 200 https://npmmirror.com/@tailwindcss%2foxide-linux-x64-gnu 296ms (cache miss)
+45 silly fetch manifest lightningcss-linux-x64-gnu@^1.29.1
+46 silly packumentCache full:https://npmmirror.com/lightningcss-linux-x64-gnu cache-miss
+47 http fetch GET 200 https://npmmirror.com/lightningcss-linux-x64-gnu 301ms (cache miss)
+48 silly placeDep ROOT @rollup/rollup-linux-x64-gnu@ OK for:  want: 4.9.5
+49 silly placeDep ROOT @tailwindcss/oxide-linux-x64-gnu@ OK for:  want: ^4.0.1
+50 silly placeDep ROOT @tailwindcss/vite@ OK for:  want: ^4.0.7
+51 silly placeDep ROOT 7ac6dc23-2f56-4915-876b-bdc00f2bfdad@ OK for:  want: *
+52 silly placeDep ROOT autoprefixer@ OK for:  want: ^10.4.20
+53 silly placeDep ROOT axios@ OK for:  want: ^1.7.4
+54 silly placeDep ROOT concurrently@ OK for:  want: ^9.0.1
+55 silly placeDep ROOT laravel-vite-plugin@ OK for:  want: ^1.0
+56 silly placeDep ROOT lightningcss-linux-x64-gnu@ OK for:  want: ^1.29.1
+57 silly placeDep ROOT tailwindcss@ OK for:  want: ^4.0.7
+58 silly placeDep ROOT vite@ OK for:  want: ^6.0
+59 verbose type invalid-json
+60 verbose stack FetchError: invalid json response body at https://npmmirror.com/@tailwindcss%2fvite reason: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+60 verbose stack     at Response.json (C:\Users\Darwyn\AppData\Local\nvm\v22.13.1\node_modules\npm\node_modules\minipass-fetch\lib\body.js:79:13)
+60 verbose stack     at async RegistryFetcher.packument (C:\Users\Darwyn\AppData\Local\nvm\v22.13.1\node_modules\npm\node_modules\pacote\lib\registry.js:98:25)
+60 verbose stack     at async RegistryFetcher.manifest (C:\Users\Darwyn\AppData\Local\nvm\v22.13.1\node_modules\npm\node_modules\pacote\lib\registry.js:128:23)
+60 verbose stack     at async #fetchManifest (C:\Users\Darwyn\AppData\Local\nvm\v22.13.1\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\build-ideal-tree.js:1202:20)
+60 verbose stack     at async #nodeFromEdge (C:\Users\Darwyn\AppData\Local\nvm\v22.13.1\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\build-ideal-tree.js:1040:19)
+60 verbose stack     at async #buildDepStep (C:\Users\Darwyn\AppData\Local\nvm\v22.13.1\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\build-ideal-tree.js:904:11)
+60 verbose stack     at async Arborist.buildIdealTree (C:\Users\Darwyn\AppData\Local\nvm\v22.13.1\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\build-ideal-tree.js:181:7)
+60 verbose stack     at async Promise.all (index 1)
+60 verbose stack     at async Arborist.reify (C:\Users\Darwyn\AppData\Local\nvm\v22.13.1\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\reify.js:131:5)
+60 verbose stack     at async Install.exec (C:\Users\Darwyn\AppData\Local\nvm\v22.13.1\node_modules\npm\lib\commands\install.js:150:5)
+61 error code FETCH_ERROR
+62 error errno FETCH_ERROR
+63 error invalid json response body at https://npmmirror.com/@tailwindcss%2fvite reason: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+64 silly unfinished npm timer reify 1778677469126
+65 silly unfinished npm timer reify:loadTrees 1778677469127
+66 verbose cwd C:\Users\Darwyn\Documents\tisi
+67 verbose os Windows_NT 10.0.22621
+68 verbose node v22.13.1
+69 verbose npm  v10.9.2
+70 verbose exit 1
+71 verbose code 1
+72 error A complete log of this run can be found in: C:\Users\Darwyn\Documents\tisi\_logs\2026-05-13T13_04_28_631Z-debug-0.log

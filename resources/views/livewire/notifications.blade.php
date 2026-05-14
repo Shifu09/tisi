@@ -6,6 +6,7 @@ use Illuminate\Notifications\DatabaseNotification;
 new class extends Component {
     public $notifications;
     public $unreadCount;
+    public $showDropdown = false;
 
     public function mount()
     {
