@@ -9,8 +9,7 @@ new class extends Component {
 
     public function mount($id)
     {
-        $this->ticket = Ticket::with(['user', 'assignedTo', 'category'])
-            ->findOrFail($id);
+        $this->ticket = Ticket::with(['user', 'assignedTo', 'category'])->findOrFail($id);
 
         if ($this->ticket->user_id !== auth()->id() && !auth()->user()->isAgent()) {
             abort(403);
@@ -37,21 +36,21 @@ new class extends Component {
         <div class="px-4 py-5 sm:px-6">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-4">
-                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
-                        @if($ticket->status === 'abierto') bg-green-100 text-green-800
+                    <span
+                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                        @if ($ticket->status === 'abierto') bg-green-100 text-green-800
                         @elseif($ticket->status === 'en_proceso') bg-yellow-100 text-yellow-800
                         @elseif($ticket->status === 'resuelto') bg-blue-100 text-blue-800
-                        @else bg-gray-100 text-gray-800
-                        @endif
+                        @else bg-gray-100 text-gray-800 @endif
                     ">
                         {{ ucfirst(str_replace('_', ' ', $ticket->status)) }}
                     </span>
-                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
-                        @if($ticket->priority === 'urgente') bg-red-100 text-red-800
+                    <span
+                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                        @if ($ticket->priority === 'urgente') bg-red-100 text-red-800
                         @elseif($ticket->priority === 'alta') bg-orange-100 text-orange-800
                         @elseif($ticket->priority === 'media') bg-yellow-100 text-yellow-800
-                        @else bg-green-100 text-green-800
-                        @endif
+                        @else bg-green-100 text-green-800 @endif
                     ">
                         Prioridad: {{ ucfirst($ticket->priority) }}
                     </span>
@@ -74,21 +73,21 @@ new class extends Component {
                         <p class="text-sm text-gray-500">{{ $ticket->created_at->format('d/m/Y H:i') }}</p>
                     </div>
 
-                    @if($ticket->category)
+                    @if ($ticket->category)
                         <div>
                             <h4 class="text-sm font-medium text-gray-500">Categoría</h4>
                             <p class="mt-1 text-gray-900">{{ $ticket->category->name }}</p>
                         </div>
                     @endif
 
-                    @if($ticket->assignedTo)
+                    @if ($ticket->assignedTo)
                         <div>
                             <h4 class="text-sm font-medium text-gray-500">Asignado a</h4>
                             <p class="mt-1 text-gray-900">{{ $ticket->assignedTo->name }}</p>
                         </div>
                     @endif
 
-                    @if($ticket->resolved_at)
+                    @if ($ticket->resolved_at)
                         <div>
                             <h4 class="text-sm font-medium text-gray-500">Resuelto el</h4>
                             <p class="mt-1 text-gray-900">{{ $ticket->resolved_at->format('d/m/Y H:i') }}</p>
@@ -99,7 +98,7 @@ new class extends Component {
         </div>
     </div>
 
-    @if(auth()->user()->isAgent())
+    @if (auth()->user()->isAgent())
         <div class="mt-6 bg-white shadow sm:rounded-lg">
             <div class="px-4 py-5 sm:px-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Acciones de Agente</h3>

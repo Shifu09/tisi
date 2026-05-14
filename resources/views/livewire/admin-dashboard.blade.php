@@ -3,6 +3,7 @@
 use Livewire\Volt\Component;
 use App\Models\Ticket;
 use App\Models\Category;
+use App\Models\User;
 
 new class extends Component {
     public $totalTickets;
@@ -12,10 +13,54 @@ new class extends Component {
     public $ticketsByCategory;
     public $ticketsByPriority;
     public $recentTickets;
+    public $allTickets;
+    public $agents;
+    public $selectedTicketId;
+
+    /**
+     * Cada elemento es un user id (string) o '' para la fila vacía al final.
+     * Siempre termina en '' para permitir añadir otro agente.
+     *
+     * @var list<string>
+     */
+    public array $pickedAgentSlots = [''];
 
     public function mount()
     {
         $this->loadStatistics();
+    }
+
+    public function updatedSelectedTicketId(): void
+    {
+        $this->pickedAgentSlots = [''];
+    }
+
+    public function updatedPickedAgentSlots(): void
+    {
+        $ordered = [];
+        foreach ($this->pickedAgentSlots as $v) {
+            if ($v === '' || $v === null) {
+                continue;
+            }
+            $id = (int) $v;
+            if (!in_array($id, $ordered, true)) {
+                $ordered[] = $id;
+            }
+        }
+
+        $this->pickedAgentSlots = array_map(static fn(int $id): string => (string) $id, $ordered);
+
+        $maxAgents = collect($this->agents ?? [])->count();
+
+        if ($maxAgents === 0) {
+            $this->pickedAgentSlots = [''];
+
+            return;
+        }
+
+        if (count($this->pickedAgentSlots) < $maxAgents) {
+            $this->pickedAgentSlots[] = '';
+        }
     }
 
     public function loadStatistics()
@@ -46,6 +91,68 @@ new class extends Component {
             ->latest()
             ->take(5)
             ->get();
+
+        $this->allTickets = Ticket::with(['user', 'category', 'assignedTo', 'assignedAgents'])
+            ->latest()
+            ->get();
+
+        $this->agents = User::whereHas('roles', function ($query) {
+            $query->whereIn('slug', ['agent', 'admin']);
+        })->get();
+    }
+
+    public function assignTicket()
+    {
+        $selectedAgentIds = collect($this->pickedAgentSlots)->filter(fn($v) => $v !== '' && $v !== null)->map(fn($v) => (int) $v)->unique()->values()->all();
+
+        $this->validate([
+            'selectedTicketId' => 'required|exists:tickets,id',
+        ]);
+
+        if (count($selectedAgentIds) < 1) {
+            $this->addError('pickedAgentSlots', 'Selecciona al menos un agente.');
+
+            return;
+        }
+
+        $ticket = Ticket::findOrFail($this->selectedTicketId);
+
+        $validAgentIds = User::query()
+            ->whereIn('id', $selectedAgentIds)
+            ->whereHas('roles', function ($query) {
+                $query->whereIn('slug', ['agent', 'admin']);
+            })
+            ->pluck('id');
+
+        if ($validAgentIds->isEmpty()) {
+            session()->flash('message', 'Selecciona al menos un usuario con rol de agente o administrador.');
+
+            return;
+        }
+
+        $beforeIds = $ticket->assignedAgentUserIds();
+
+        $ticket->assignedAgents()->syncWithoutDetaching($validAgentIds->all());
+
+        if ($ticket->status === 'abierto') {
+            $ticket->update(['status' => 'en_proceso']);
+        }
+
+        $ticket->refreshPrimaryAssigneeFromPivot();
+
+        $afterIds = $ticket->assignedAgentUserIds();
+        $newIds = array_values(array_diff($afterIds, $beforeIds));
+
+        foreach (User::whereIn('id', $newIds)->get() as $agent) {
+            $agent->notify(new \App\Notifications\TicketAssigned($ticket));
+        }
+
+        $this->selectedTicketId = null;
+        $this->pickedAgentSlots = [''];
+
+        $this->loadStatistics();
+
+        session()->flash('message', 'Agentes asignados al ticket correctamente.');
     }
 
     public function with()
@@ -58,6 +165,8 @@ new class extends Component {
             'ticketsByCategory' => $this->ticketsByCategory,
             'ticketsByPriority' => $this->ticketsByPriority,
             'recentTickets' => $this->recentTickets,
+            'allTickets' => $this->allTickets,
+            'agents' => $this->agents,
         ];
     }
 }; ?>
@@ -214,7 +323,7 @@ new class extends Component {
     </div>
 
     <!-- Recent Tickets -->
-    <div class="bg-white rounded-lg shadow">
+    <div class="bg-white rounded-lg shadow mb-6">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-medium text-gray-900">Tickets Recientes</h3>
         </div>
@@ -261,5 +370,185 @@ new class extends Component {
                 <p>No hay tickets recientes</p>
             </div>
         @endif
+    </div>
+
+    <!-- Assign Tickets Section -->
+    <div class="bg-white rounded-lg shadow">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Asignar Tickets</h3>
+            <p class="text-sm text-gray-600">Elige el ticket y uno o varios agentes: cada uno en su propia lista; al
+                elegir un agente, aparece otra lista para añadir otro si lo necesitas.</p>
+        </div>
+        <div class="p-6">
+            @if (session()->has('message'))
+                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+                    {{ session('message') }}
+                </div>
+            @endif
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+                <div class="lg:col-span-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Ticket</label>
+                    <select wire:model.live="selectedTicketId"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">-- Seleccionar ticket --</option>
+                        @foreach ($allTickets as $ticket)
+                            <option value="{{ $ticket->id }}">
+                                #{{ $ticket->id }} - {{ Str::limit($ticket->title, 40) }}
+                                @if ($ticket->assignedAgents->isNotEmpty())
+                                    ({{ $ticket->assignedAgents->pluck('name')->join(', ') }})
+                                @endif
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('selectedTicketId')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="lg:col-span-4">
+                    @foreach ($pickedAgentSlots as $index => $slotValue)
+                        @php
+                            $excludeIds = [];
+                            foreach ($pickedAgentSlots as $i => $v) {
+                                if ($i !== $index && $v !== '' && $v !== null) {
+                                    $excludeIds[] = (string) $v;
+                                }
+                            }
+                            $isTrailingEmpty = $slotValue === '' && $index === array_key_last($pickedAgentSlots);
+                        @endphp
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Agente
+                                {{ $index + 1 }}</label>
+                            {{-- @if ($isTrailingEmpty && $index > 0)
+                                Otro agente (opcional)
+                            @else
+                                Agente {{ $index + 1 }}
+                            @endif --}}
+                            </label>
+                            <select wire:model.live="pickedAgentSlots.{{ $index }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option value="">
+                                    @if ($isTrailingEmpty && $index === 0)
+                                        -- Seleccionar agente --
+                                    @elseif ($isTrailingEmpty)
+                                        -- Elegir otro agente --
+                                    @else
+                                        -- Sin selección --
+                                    @endif
+                                </option>
+                                @foreach ($agents as $agent)
+                                    @php $idStr = (string) $agent->id; @endphp
+                                    @if (in_array($idStr, $excludeIds, true) && $idStr !== (string) $slotValue)
+                                        @continue
+                                    @endif
+                                    <option value="{{ $agent->id }}">
+                                        {{ $agent->name }} {{ $agent->id === auth()->id() ? '(Tú)' : '' }}
+                                        @if ($agent->isAdmin())
+                                            (Admin)
+                                        @elseif($agent->isAgent())
+                                            (Agente)
+                                        @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endforeach
+                    @error('pickedAgentSlots')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="lg:col-span-3 flex items-end">
+                    <button type="button" wire:click="assignTicket" wire:loading.attr="disabled"
+                        class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span wire:loading.remove wire:target="assignTicket">Añadir asignación</span>
+                        <span wire:loading wire:target="assignTicket">Guardando…</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- All Tickets List -->
+            <div class="border-t border-gray-200 pt-6">
+                <h4 class="text-md font-medium text-gray-900 mb-4">Todos los Tickets</h4>
+                @if ($allTickets->count() > 0)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        ID</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Título</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Creador</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Agentes</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Estado</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Prioridad</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach ($allTickets as $ticket)
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            #{{ $ticket->id }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <a href="/tickets/{{ $ticket->id }}"
+                                                class="text-indigo-600 hover:text-indigo-900">
+                                                {{ Str::limit($ticket->title, 30) }}
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ $ticket->user->name }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500 max-w-xs">
+                                            @if ($ticket->assignedAgents->isNotEmpty())
+                                                {{ $ticket->assignedAgents->pluck('name')->join(', ') }}
+                                            @else
+                                                <span class="text-gray-400">Sin asignar</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span
+                                                class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                                                @if ($ticket->status === 'abierto') bg-green-100 text-green-800
+                                                @elseif($ticket->status === 'en_proceso') bg-yellow-100 text-yellow-800
+                                                @elseif($ticket->status === 'resuelto') bg-blue-100 text-blue-800
+                                                @else bg-gray-100 text-gray-800 @endif
+                                            ">
+                                                {{ ucfirst(str_replace('_', ' ', $ticket->status)) }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span
+                                                class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                                                @if ($ticket->priority === 'urgente') bg-red-100 text-red-800
+                                                @elseif($ticket->priority === 'alta') bg-orange-100 text-orange-800
+                                                @elseif($ticket->priority === 'media') bg-yellow-100 text-yellow-800
+                                                @else bg-green-100 text-green-800 @endif
+                                            ">
+                                                {{ ucfirst($ticket->priority) }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="text-center text-gray-500 py-8">
+                        <p>No hay tickets en el sistema</p>
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
 </div>

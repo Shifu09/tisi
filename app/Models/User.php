@@ -70,9 +70,10 @@ class User extends Authenticatable // implements MustVerifyEmail
         return $this->hasMany(Ticket::class);
     }
 
-    public function assignedTickets(): HasMany
+    public function assignedTickets(): BelongsToMany
     {
-        return $this->hasMany(Ticket::class, 'assigned_to');
+        return $this->belongsToMany(Ticket::class, 'ticket_agent')
+            ->withTimestamps();
     }
 
     public function hasRole(string $role): bool
