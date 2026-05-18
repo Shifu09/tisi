@@ -97,23 +97,4 @@ new class extends Component {
             </div>
         </div>
     </div>
-
-    @if (auth()->user()->isAgent())
-        <div class="mt-6 bg-white shadow sm:rounded-lg">
-            <div class="px-4 py-5 sm:px-6">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">Acciones de Agente</h3>
-                <div class="flex space-x-4">
-                    <button class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700">
-                        Asignar a mí
-                    </button>
-                    <button class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                        Marcar como resuelto
-                    </button>
-                    <button class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">
-                        Cerrar ticket
-                    </button>
-                </div>
-            </div>
-        </div>
-    @endif
 </div>

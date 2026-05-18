@@ -1,26 +1,21 @@
 <?php
 
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use App\Models\Ticket;
 
 new class extends Component {
-    public $assignedTickets;
+    use WithPagination;
+
     public $unassignedTickets;
 
     public function mount()
     {
-        $this->loadTickets();
+        $this->loadUnassignedTickets();
     }
 
-    public function loadTickets()
+    public function loadUnassignedTickets()
     {
-        $this->assignedTickets = auth()
-            ->user()
-            ->assignedTickets()
-            ->with(['user', 'category'])
-            ->latest()
-            ->get();
-
         $this->unassignedTickets = Ticket::whereNull('assigned_to')
             ->where('status', '!=', 'cerrado')
             ->with(['user', 'category'])
@@ -38,10 +33,8 @@ new class extends Component {
                 'status' => 'en_proceso',
             ]);
 
-            // Notificar al usuario creador
-            $ticket->user->notify(new \App\Notifications\TicketAssigned($ticket));
-
-            $this->loadTickets();
+            $this->resetPage();
+            $this->loadUnassignedTickets();
         }
     }
 
@@ -49,23 +42,30 @@ new class extends Component {
     {
         $ticket = Ticket::findOrFail($ticketId);
 
-        if ($ticket->assigned_to === auth()->id()) {
+        if (
+            $ticket
+                ->assignedAgents()
+                ->where('users.id', auth()->id())
+                ->exists()
+        ) {
             $ticket->update([
                 'status' => $status,
                 'resolved_at' => $status === 'resuelto' ? now() : null,
             ]);
 
-            // Notificar al usuario creador
-            $ticket->user->notify(new \App\Notifications\TicketUpdated($ticket, "cambiado a estado: {$status}"));
-
-            $this->loadTickets();
+            $this->resetPage();
         }
     }
 
     public function with()
     {
         return [
-            'assignedTickets' => $this->assignedTickets,
+            'assignedTickets' => auth()
+                ->user()
+                ->assignedTickets()
+                ->with(['user', 'category'])
+                ->orderByDesc('tickets.created_at')
+                ->paginate(4, pageName: 'assignedPage'),
             'unassignedTickets' => $this->unassignedTickets,
         ];
     }
@@ -81,10 +81,10 @@ new class extends Component {
         <!-- Tickets Asignados -->
         <div class="bg-white rounded-lg shadow">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-medium text-gray-900">Mis Tickets Asignados ({{ $assignedTickets->count() }})
+                <h3 class="text-lg font-medium text-gray-900">Mis Tickets Asignados ({{ $assignedTickets->total() }})
                 </h3>
             </div>
-            @if ($assignedTickets->count() > 0)
+            @if ($assignedTickets->total() > 0)
                 <div class="divide-y divide-gray-200">
                     @foreach ($assignedTickets as $ticket)
                         <div class="px-6 py-4">
@@ -105,7 +105,8 @@ new class extends Component {
                             </div>
                             <p class="text-sm text-gray-600 mb-2">{{ Str::limit($ticket->description, 80) }}</p>
                             <div class="flex items-center justify-between">
-                                <span class="text-xs text-gray-500">{{ $ticket->created_at->diffForHumans() }}</span>
+                                <span
+                                    class="text-xs text-gray-500">{{ $ticket->created_at->format('d/m/Y h:i A') }}</span>
                                 <div class="flex space-x-2">
                                     <button wire:click="updateStatus({{ $ticket->id }}, 'en_proceso')"
                                         class="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200">
@@ -124,6 +125,11 @@ new class extends Component {
                         </div>
                     @endforeach
                 </div>
+                @if ($assignedTickets->hasPages())
+                    <div class="px-6 py-4 border-t border-zinc-200">
+                        {{ $assignedTickets->links() }}
+                    </div>
+                @endif
             @else
                 <div class="px-6 py-8 text-center text-gray-500">
                     <p>No tienes tickets asignados</p>
