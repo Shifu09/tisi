@@ -14,6 +14,7 @@ new class extends Component {
     public $ticketsByPriority;
     public $recentTickets;
     public $allTickets;
+    public $assignableTickets;
     public $agents;
     public $selectedTicketId;
 
@@ -96,6 +97,11 @@ new class extends Component {
             ->latest()
             ->get();
 
+        $this->assignableTickets = Ticket::assignable()
+            ->with(['assignedAgents'])
+            ->latest()
+            ->get();
+
         $this->agents = User::whereHas('roles', function ($query) {
             $query->whereIn('slug', ['agent', 'admin']);
         })->get();
@@ -116,6 +122,12 @@ new class extends Component {
         }
 
         $ticket = Ticket::findOrFail($this->selectedTicketId);
+
+        if (!$ticket->isAssignable()) {
+            $this->addError('selectedTicketId', 'Solo se pueden asignar tickets abiertos o en proceso.');
+
+            return;
+        }
 
         $validAgentIds = User::query()
             ->whereIn('id', $selectedAgentIds)
@@ -166,6 +178,7 @@ new class extends Component {
             'ticketsByPriority' => $this->ticketsByPriority,
             'recentTickets' => $this->recentTickets,
             'allTickets' => $this->allTickets,
+            'assignableTickets' => $this->assignableTickets,
             'agents' => $this->agents,
         ];
     }
@@ -323,7 +336,7 @@ new class extends Component {
     </div>
 
     <!-- Recent Tickets -->
-    <div class="bg-white rounded-lg shadow mb-6">
+    {{-- <div class="bg-white rounded-lg shadow mb-6">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-medium text-gray-900">Tickets Recientes</h3>
         </div>
@@ -370,14 +383,13 @@ new class extends Component {
                 <p>No hay tickets recientes</p>
             </div>
         @endif
-    </div>
+    </div> --}}
 
     <!-- Assign Tickets Section -->
     <div class="bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-medium text-gray-900">Asignar Tickets</h3>
-            <p class="text-sm text-gray-600">Elige el ticket y uno o varios agentes: cada uno en su propia lista; al
-                elegir un agente, aparece otra lista para añadir otro si lo necesitas.</p>
+            <p class="text-sm text-gray-600">Elige el ticket y uno o varios agentes.</p>
         </div>
         <div class="p-6">
             @if (session()->has('message'))
@@ -391,15 +403,18 @@ new class extends Component {
                     <label class="block text-sm font-medium text-gray-700 mb-2">Ticket</label>
                     <select wire:model.live="selectedTicketId"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="">-- Seleccionar ticket --</option>
-                        @foreach ($allTickets as $ticket)
+                        <option value="">Seleccionar ticket</option>
+                        @forelse ($assignableTickets as $ticket)
                             <option value="{{ $ticket->id }}">
                                 #{{ $ticket->id }} - {{ Str::limit($ticket->title, 40) }}
+                                ({{ ucfirst(str_replace('_', ' ', $ticket->status)) }})
                                 @if ($ticket->assignedAgents->isNotEmpty())
-                                    ({{ $ticket->assignedAgents->pluck('name')->join(', ') }})
+                                    — {{ $ticket->assignedAgents->pluck('name')->join(', ') }}
                                 @endif
                             </option>
-                        @endforeach
+                        @empty
+                            <option value="" disabled>No hay tickets abiertos o en proceso</option>
+                        @endforelse
                     </select>
                     @error('selectedTicketId')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -430,11 +445,11 @@ new class extends Component {
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                 <option value="">
                                     @if ($isTrailingEmpty && $index === 0)
-                                        -- Seleccionar agente --
+                                        Seleccionar agente
                                     @elseif ($isTrailingEmpty)
-                                        -- Elegir otro agente --
+                                        Elegir otro agente
                                     @else
-                                        -- Sin selección --
+                                        Sin selección
                                     @endif
                                 </option>
                                 @foreach ($agents as $agent)
@@ -471,9 +486,21 @@ new class extends Component {
             <!-- All Tickets List -->
             <div class="border-t border-gray-200 pt-6">
                 <h4 class="text-md font-medium text-gray-900 mb-4">Todos los Tickets</h4>
+                <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-2">
+                    <div class="sm:max-w-xs">
+                        <label for="min" class="block text-md font-medium text-gray-700">Fecha desde</label>
+                        <input id="min" type="text" placeholder="Seleccionar fecha"
+                            class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                    </div>
+                    <div class="sm:max-w-xs">
+                        <label for="max" class="block text-md font-medium text-gray-700">Fecha hasta</label>
+                        <input id="max" type="text" placeholder="Seleccionar fecha"
+                            class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                    </div>
+                </div>
                 @if ($allTickets->count() > 0)
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
+                        <table class="min-w-full divide-y divide-gray-200" id="example">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th
@@ -488,6 +515,9 @@ new class extends Component {
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Agentes</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Fecha</th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Estado</th>
@@ -516,6 +546,8 @@ new class extends Component {
                                                 <span class="text-gray-400">Sin asignar</span>
                                             @endif
                                         </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ $ticket->created_at->format('Y-m-d') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span
                                                 class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
@@ -550,5 +582,44 @@ new class extends Component {
                 @endif
             </div>
         </div>
+        <script>
+            // DataTables initialisation
+            let table = new DataTable('#example', {
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/2.3.8/i18n/es-ES.json'
+                }
+            });
+
+            const minInput = document.querySelector('#min');
+            const maxInput = document.querySelector('#max');
+
+            if (minInput && maxInput && typeof DateTime !== 'undefined') {
+                let minDate = new DateTime('#min', {
+                    format: 'YYYY-MM-DD'
+                });
+                let maxDate = new DateTime('#max', {
+                    format: 'YYYY-MM-DD'
+                });
+
+                DataTable.ext.search.push(function(settings, data, dataIndex) {
+                    let min = minDate.val();
+                    let max = maxDate.val();
+                    let date = new Date(data[4]);
+
+                    if (
+                        (min === null && max === null) ||
+                        (min === null && date <= max) ||
+                        (min <= date && max === null) ||
+                        (min <= date && date <= max)
+                    ) {
+                        return true;
+                    }
+                    return false;
+                });
+
+                minInput.addEventListener('change', () => table.draw());
+                maxInput.addEventListener('change', () => table.draw());
+            }
+        </script>
     </div>
 </div>

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Ticket extends Model
 {
+    public const STATUSES_ASSIGNABLE = ['abierto', 'en_proceso'];
     protected $fillable = [
         'title',
         'description',
@@ -73,5 +75,15 @@ class Ticket extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function scopeAssignable(Builder $query): Builder
+    {
+        return $query->whereIn('status', self::STATUSES_ASSIGNABLE);
+    }
+
+    public function isAssignable(): bool
+    {
+        return in_array($this->status, self::STATUSES_ASSIGNABLE, true);
     }
 }
