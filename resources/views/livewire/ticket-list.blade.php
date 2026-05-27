@@ -20,27 +20,27 @@ new class extends Component {
 
     @if ($tickets->count() === 0)
         <div class="text-center py-12">
-            <div class="text-gray-400 text-6xl mb-4">📋</div>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">No tienes tickets</h3>
-            <p class="text-gray-600 mb-6">Crea tu primer ticket de soporte</p>
+            <div class="text-gray-400 dark:text-gray-500 text-6xl mb-4">📋</div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No tienes tickets</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-6">Crea tu primer ticket de soporte</p>
             <a href="/tickets/create"
                 class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
                 Crear Ticket
             </a>
         </div>
     @else
-        <div class="bg-white shadow overflow-hidden sm:rounded-md">
-            <ul class="divide-y divide-gray-200">
+        <div class="bg-white shadow overflow-hidden sm:rounded-md dark:bg-zinc-950 dark:border dark:border-zinc-800">
+            <ul class="divide-y divide-gray-200 dark:divide-zinc-700">
                 @foreach ($tickets as $ticket)
                     <li>
-                        <a href="/tickets/{{ $ticket->id }}" class="block hover:bg-gray-50">
+                        <a href="/tickets/{{ $ticket->id }}" class="block hover:bg-gray-50 dark:hover:bg-zinc-900">
                             <div class="px-4 py-4 sm:px-6">
                                 <div class="flex items-center justify-between">
                                     <div class="flex-1">
-                                        <p class="text-sm font-medium text-indigo-600 truncate">
+                                        <p class="text-sm font-medium text-indigo-600 truncate dark:text-indigo-400">
                                             {{ $ticket->title }}
                                         </p>
-                                        <p class="mt-1 text-sm text-gray-600">
+                                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
                                             {{ Str::limit($ticket->description, 100) }}
                                         </p>
                                     </div>
@@ -57,7 +57,7 @@ new class extends Component {
                                     </div>
                                 </div>
                                 <div class="mt-2 flex items-center justify-between">
-                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
                                         <span>
                                             Prioridad:
                                             <span
@@ -71,7 +71,8 @@ new class extends Component {
                                             </span>
                                         </span>
                                         @if ($ticket->category)
-                                            <span>Categoría: {{ $ticket->category->name }}</span>
+                                            <span class="dark:text-gray-300">Categoría:
+                                                {{ $ticket->category->name }}</span>
                                         @endif
                                         <span>Creado: {{ $ticket->created_at->diffForHumans() }}</span>
                                     </div>

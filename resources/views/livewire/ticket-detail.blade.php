@@ -26,13 +26,14 @@ new class extends Component {
 
 <div>
     <div class="mb-6">
-        <a href="/tickets" class="text-indigo-600 hover:text-indigo-900 mb-4 inline-block">
+        <a href="/tickets"
+            class="text-indigo-600 hover:text-indigo-900 mb-4 inline-block dark:text-indigo-400 dark:hover:text-indigo-200">
             ← Volver a mis tickets
         </a>
-        <h2 class="text-2xl font-bold text-gray-900">{{ $ticket->title }}</h2>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $ticket->title }}</h2>
     </div>
 
-    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg dark:bg-zinc-950 dark:border dark:border-zinc-800">
         <div class="px-4 py-5 sm:px-6">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-4">
@@ -55,42 +56,44 @@ new class extends Component {
                         Prioridad: {{ ucfirst($ticket->priority) }}
                     </span>
                 </div>
-                <div class="text-sm text-gray-500">
+                <div class="text-sm text-gray-500 dark:text-gray-400">
                     #{{ $ticket->id }}
                 </div>
             </div>
 
             <div class="space-y-4">
                 <div>
-                    <h3 class="text-lg font-medium text-gray-900">Descripción</h3>
-                    <p class="mt-2 text-gray-600">{{ $ticket->description }}</p>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Descripción</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-300">{{ $ticket->description }}</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <h4 class="text-sm font-medium text-gray-500">Creado por</h4>
-                        <p class="mt-1 text-gray-900">{{ $ticket->user->name }}</p>
-                        <p class="text-sm text-gray-500">{{ $ticket->created_at->format('d/m/Y H:i') }}</p>
+                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Creado por</h4>
+                        <p class="mt-1 text-gray-900 dark:text-gray-100">{{ $ticket->user->name }}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ $ticket->created_at->format('d/m/Y H:i') }}</p>
                     </div>
 
                     @if ($ticket->category)
                         <div>
-                            <h4 class="text-sm font-medium text-gray-500">Categoría</h4>
-                            <p class="mt-1 text-gray-900">{{ $ticket->category->name }}</p>
+                            <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Categoría</h4>
+                            <p class="mt-1 text-gray-900 dark:text-gray-100">{{ $ticket->category->name }}</p>
                         </div>
                     @endif
 
                     @if ($ticket->assignedTo)
                         <div>
-                            <h4 class="text-sm font-medium text-gray-500">Asignado a</h4>
-                            <p class="mt-1 text-gray-900">{{ $ticket->assignedTo->name }}</p>
+                            <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Asignado a</h4>
+                            <p class="mt-1 text-gray-900 dark:text-gray-100">{{ $ticket->assignedTo->name }}</p>
                         </div>
                     @endif
 
                     @if ($ticket->resolved_at)
                         <div>
-                            <h4 class="text-sm font-medium text-gray-500">Resuelto el</h4>
-                            <p class="mt-1 text-gray-900">{{ $ticket->resolved_at->format('d/m/Y H:i') }}</p>
+                            <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Resuelto el</h4>
+                            <p class="mt-1 text-gray-900 dark:text-gray-100">
+                                {{ $ticket->resolved_at->format('d/m/Y H:i') }}</p>
                         </div>
                     @endif
                 </div>

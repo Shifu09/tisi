@@ -9,10 +9,7 @@
     <flux:sidebar sticky stashable class="border-r border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-        <a href="{{ route('dashboard') }}" class="mr-5 flex items-center space-x-2" wire:navigate>
-            <x-app-logo class="size-8" href="#"></x-app-logo>
-        </a>
-
+        <img src="/img/logo1.png" alt="Logo">
         <flux:navlist variant="outline">
             <flux:navlist.group heading="Platform" class="grid">
                 <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
@@ -32,25 +29,7 @@
 
         <flux:spacer />
 
-        <!-- Notificaciones -->
-        @auth
-            <livewire:notifications />
-        @endauth
 
-        <flux:navlist variant="outline">
-            <flux:button x-data x-on:click="$flux.dark = ! $flux.dark" icon="moon" variant="subtle"
-                aria-label="Toggle dark mode" />
-            <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit"
-                target="_blank">
-                Repository
-            </flux:navlist.item>
-
-            <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits" target="_blank">
-                Documentation
-            </flux:navlist.item>
-        </flux:navlist>
-
-        <!-- Desktop User Menu -->
         <flux:dropdown position="bottom" align="start">
             <flux:profile :name="auth()->user()->name" :initials="auth()->user()->initials()"
                 icon-trailing="chevrons-up-down" />

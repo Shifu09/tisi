@@ -186,75 +186,81 @@ new class extends Component {
 
 <div>
     <div class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-900">Dashboard de Tickets</h2>
-        <p class="mt-1 text-sm text-gray-600">Estadísticas del sistema de soporte</p>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard de Tickets</h2>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Estadísticas del sistema de soporte</p>
     </div>
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 dark:bg-zinc-950 dark:border dark:border-zinc-800">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
-                    <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                        <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center dark:bg-blue-900">
+                        <svg class="h-6 w-6 text-blue-600 dark:text-blue-300" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
                     </div>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Total Tickets</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $totalTickets }}</p>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Tickets</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalTickets }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 dark:bg-zinc-950 dark:border dark:border-zinc-800">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
-                    <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center dark:bg-green-900">
+                        <svg class="h-6 w-6 text-green-600 dark:text-green-300" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Abiertos</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $openTickets }}</p>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Abiertos</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $openTickets }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 dark:bg-zinc-950 dark:border dark:border-zinc-800">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
-                    <div class="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
-                        <svg class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div
+                        class="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center dark:bg-yellow-900">
+                        <svg class="h-6 w-6 text-yellow-600 dark:text-yellow-300" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">En Proceso</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $inProgressTickets }}</p>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">En Proceso</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $inProgressTickets }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white rounded-lg shadow p-6 dark:bg-zinc-950 dark:border dark:border-zinc-800">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
-                    <div class="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
-                        <svg class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div
+                        class="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center dark:bg-purple-900">
+                        <svg class="h-6 w-6 text-purple-600 dark:text-purple-300" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Resueltos</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $resolvedTickets }}</p>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Resueltos</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $resolvedTickets }}</p>
                 </div>
             </div>
         </div>
@@ -263,8 +269,8 @@ new class extends Component {
     <!-- Charts Section -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <!-- Tickets by Category -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Tickets por Categoría</h3>
+        <div class="bg-white rounded-lg shadow p-6 dark:bg-zinc-950 dark:border dark:border-zinc-800">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Tickets por Categoría</h3>
             @if ($ticketsByCategory->count() > 0)
                 <div class="space-y-3">
                     @foreach ($ticketsByCategory as $category)
@@ -272,11 +278,12 @@ new class extends Component {
                             <div class="flex items-center">
                                 <div class="h-3 w-3 rounded-full mr-2"
                                     style="background-color: {{ $category['color'] }}"></div>
-                                <span class="text-sm text-gray-700">{{ $category['name'] }}</span>
+                                <span class="text-sm text-gray-700 dark:text-gray-300">{{ $category['name'] }}</span>
                             </div>
-                            <span class="text-sm font-medium text-gray-900">{{ $category['count'] }}</span>
+                            <span
+                                class="text-sm font-medium text-gray-900 dark:text-white">{{ $category['count'] }}</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="w-full bg-gray-200 rounded-full h-2 dark:bg-zinc-700">
                             <div class="h-2 rounded-full"
                                 style="background-color: {{ $category['color'] }}; width: {{ ($category['count'] / $totalTickets) * 100 }}%">
                             </div>
@@ -284,53 +291,53 @@ new class extends Component {
                     @endforeach
                 </div>
             @else
-                <p class="text-sm text-gray-500">No hay datos disponibles</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">No hay datos disponibles</p>
             @endif
         </div>
 
         <!-- Tickets by Priority -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Tickets por Prioridad</h3>
+        <div class="bg-white rounded-lg shadow p-6 dark:bg-zinc-950 dark:border dark:border-zinc-800">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Tickets por Prioridad</h3>
             @if ($totalTickets > 0)
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-700">Urgente</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Urgente</span>
                         <span class="text-sm font-medium text-red-600">{{ $ticketsByPriority['urgente'] }}</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="w-full bg-gray-200 rounded-full h-2 dark:bg-zinc-700">
                         <div class="h-2 rounded-full bg-red-500"
                             style="width: {{ ($ticketsByPriority['urgente'] / $totalTickets) * 100 }}%"></div>
                     </div>
 
                     <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-700">Alta</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Alta</span>
                         <span class="text-sm font-medium text-orange-600">{{ $ticketsByPriority['alta'] }}</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="w-full bg-gray-200 rounded-full h-2 dark:bg-zinc-700">
                         <div class="h-2 rounded-full bg-orange-500"
                             style="width: {{ ($ticketsByPriority['alta'] / $totalTickets) * 100 }}%"></div>
                     </div>
 
                     <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-700">Media</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Media</span>
                         <span class="text-sm font-medium text-yellow-600">{{ $ticketsByPriority['media'] }}</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="w-full bg-gray-200 rounded-full h-2 dark:bg-zinc-700">
                         <div class="h-2 rounded-full bg-yellow-500"
                             style="width: {{ ($ticketsByPriority['media'] / $totalTickets) * 100 }}%"></div>
                     </div>
 
                     <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-700">Baja</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Baja</span>
                         <span class="text-sm font-medium text-green-600">{{ $ticketsByPriority['baja'] }}</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="w-full bg-gray-200 rounded-full h-2 dark:bg-zinc-700">
                         <div class="h-2 rounded-full bg-green-500"
                             style="width: {{ ($ticketsByPriority['baja'] / $totalTickets) * 100 }}%"></div>
                     </div>
                 </div>
             @else
-                <p class="text-sm text-gray-500">No hay datos disponibles</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">No hay datos disponibles</p>
             @endif
         </div>
     </div>
@@ -386,23 +393,23 @@ new class extends Component {
     </div> --}}
 
     <!-- Assign Tickets Section -->
-    <div class="bg-white rounded-lg shadow">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">Asignar Tickets</h3>
-            <p class="text-sm text-gray-600">Elige el ticket y uno o varios agentes.</p>
+    <div class="bg-white rounded-lg shadow dark:bg-zinc-950 dark:border dark:border-zinc-800">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-zinc-700">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">Asignar Tickets</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Elige el ticket y uno o varios agentes.</p>
         </div>
         <div class="p-6">
             @if (session()->has('message'))
-                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded dark:bg-green-900 dark:text-green-100">
                     {{ session('message') }}
                 </div>
             @endif
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
                 <div class="lg:col-span-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Ticket</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ticket</label>
                     <select wire:model.live="selectedTicketId"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-900 dark:border-zinc-700 dark:text-gray-100">
                         <option value="">Seleccionar ticket</option>
                         @forelse ($assignableTickets as $ticket)
                             <option value="{{ $ticket->id }}">
@@ -442,7 +449,7 @@ new class extends Component {
                             @endif --}}
                             </label>
                             <select wire:model.live="pickedAgentSlots.{{ $index }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-900 dark:border-zinc-700 dark:text-gray-100">
                                 <option value="">
                                     @if ($isTrailingEmpty && $index === 0)
                                         Seleccionar agente
@@ -484,69 +491,75 @@ new class extends Component {
             </div>
 
             <!-- All Tickets List -->
-            <div class="border-t border-gray-200 pt-6">
-                <h4 class="text-md font-medium text-gray-900 mb-4">Todos los Tickets</h4>
+            <div class="border-t border-gray-200 dark:border-zinc-700 pt-6">
+                <h4 class="text-md font-medium text-gray-900 dark:text-white mb-4">Todos los Tickets</h4>
                 <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-2">
                     <div class="sm:max-w-xs">
-                        <label for="min" class="block text-md font-medium text-gray-700">Fecha desde</label>
+                        <label for="min" class="block text-md font-medium text-gray-700 dark:text-gray-300">Fecha
+                            desde</label>
                         <input id="min" type="text" placeholder="Seleccionar fecha"
-                            class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                            class="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-zinc-900 dark:border-zinc-700 dark:text-gray-100" />
                     </div>
                     <div class="sm:max-w-xs">
-                        <label for="max" class="block text-md font-medium text-gray-700">Fecha hasta</label>
+                        <label for="max" class="block text-md font-medium text-gray-700 dark:text-gray-300">Fecha
+                            hasta</label>
                         <input id="max" type="text" placeholder="Seleccionar fecha"
-                            class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                            class="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-zinc-900 dark:border-zinc-700 dark:text-gray-100" />
                     </div>
                 </div>
                 @if ($allTickets->count() > 0)
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200" id="example">
-                            <thead class="bg-gray-50">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-zinc-700" id="example">
+                            <thead class="bg-gray-50 dark:bg-zinc-900">
                                 <tr>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         ID</th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         Título</th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         Creador</th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         Agentes</th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         Fecha</th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         Estado</th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         Prioridad</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tbody class="bg-white divide-y divide-gray-200 dark:bg-zinc-950 dark:divide-zinc-700">
                                 @foreach ($allTickets as $ticket)
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-zinc-900">
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
                                             #{{ $ticket->id }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                                             <a href="/tickets/{{ $ticket->id }}"
-                                                class="text-indigo-600 hover:text-indigo-900">
+                                                class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
                                                 {{ Str::limit($ticket->title, 30) }}
                                             </a>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             {{ $ticket->user->name }}</td>
-                                        <td class="px-6 py-4 text-sm text-gray-500 max-w-xs">
+                                        <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs">
                                             @if ($ticket->assignedAgents->isNotEmpty())
                                                 {{ $ticket->assignedAgents->pluck('name')->join(', ') }}
                                             @else
-                                                <span class="text-gray-400">Sin asignar</span>
+                                                <span class="text-gray-400 dark:text-gray-500">Sin asignar</span>
                                             @endif
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             {{ $ticket->created_at->format('Y-m-d') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span
@@ -576,7 +589,7 @@ new class extends Component {
                         </table>
                     </div>
                 @else
-                    <div class="text-center text-gray-500 py-8">
+                    <div class="text-center text-gray-500 dark:text-gray-400 py-8">
                         <p>No hay tickets en el sistema</p>
                     </div>
                 @endif
