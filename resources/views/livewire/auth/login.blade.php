@@ -74,6 +74,14 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
 <div class="flex flex-col gap-6">
     <img id="app-logo" src="{{ asset('img/logo1.png') }}" />
+    <style>
+        #app-logo {
+            width: 400px;
+            height: auto;
+            transform: translateX(-4%);
+
+        }
+    </style>
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />

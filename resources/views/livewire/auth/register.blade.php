@@ -41,13 +41,13 @@ new #[Layout('components.layouts.auth')] class extends Component {
         #app-logo {
             width: 400px;
             height: auto;
-            transform: translateX(-3%);
+            transform: translateX(-4%);
 
         }
     </style>
 
     <x-auth-header title="Crear Cuenta" description="Ingresa tus datos a continuación para crear tu cuenta" />
-
+    <br>
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
 
@@ -77,14 +77,16 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 autocomplete="new-password" placeholder="Confirmar Contraseña" />
         </div>
 
-        <div class="flex items-center justify-end">
-            <flux:button type="submit" variant="primary" class="w-full">
+        <div class="flex items-center justify-end" style="margin-top: 1.5 rem; ">
+            <flux:button variant="primary" type="submit" class="w-full"
+                style="background-color: #1b8dea; box-shadow: 0 4px 6px rgba(11, 0, 0, 0.211);">
                 {{ __('Crear Cuenta') }}
             </flux:button>
         </div>
     </form>
 
     <div class="space-x-1 text-center text-sm text-zinc-600 dark:text-zinc-400">
+        <br>
         ¿Ya tienes una cuenta?
         <x-text-link href="{{ route('login') }}">Inicia sesión</x-text-link>
     </div>
